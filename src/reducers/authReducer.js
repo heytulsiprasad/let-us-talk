@@ -1,9 +1,10 @@
-import { SET_CURRENT_USER } from "./../actions/types";
+import { CLEAR_CURRENT_USER, SET_CURRENT_USER } from "./../actions/types";
+
+import isEmpty from "./../utils/isEmpty";
 
 const initialState = {
   isAuthenticated: false,
   user: {},
-  data: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,10 +12,14 @@ const reducer = (state = initialState, action) => {
     case SET_CURRENT_USER:
       return {
         ...state,
-        data: {
-          ...state.data,
-          ...action.payload,
-        },
+        isAuthenticated: !isEmpty(action.payload),
+        user: action.payload,
+      };
+    case CLEAR_CURRENT_USER:
+      return {
+        ...state,
+        isAuthenticated: !action.payload,
+        user: action.payload,
       };
     default:
       return state;

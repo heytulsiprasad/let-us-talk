@@ -1,12 +1,29 @@
-import axios from "axios";
-import { SET_CURRENT_USER } from "./types";
+import { auth } from "./../firebaseInit";
+import { CLEAR_CURRENT_USER, SET_CURRENT_USER, SET_ERRORS } from "./types";
 
-export const getSomeData = () => async (dispatch) => {
-  const response = (
-    await axios.get(
-      "https://ytoai8fdih.execute-api.ap-south-1.amazonaws.com/test/message/Ishaan?age=19&crypto=TRX&fiat=INR&fiatAmt=10000"
-    )
-  ).data;
+export const signUpUser = ({ email, password }, history) => async (
+  dispatch
+) => {
+  try {
+    const response = await auth.createUserWithEmailAndPassword(email, password);
+    dispatch({ type: SET_CURRENT_USER, payload: response.user });
+    history.push("/");
+  } catch (error) {
+    dispatch({ type: SET_ERRORS, payload: error });
+  }
+};
 
-  dispatch({ type: SET_CURRENT_USER, payload: response });
+export const loginUser = ({ email, password }, history) => async (dispatch) => {
+  try {
+    const response = await auth.signInWithEmailAndPassword(email, password);
+    dispatch({ type: SET_CURRENT_USER, payload: response.user });
+    history.push("/");
+  } catch (error) {
+    dispatch({ type: SET_ERRORS, payload: error });
+  }
+};
+
+export const logoutUser = () => (dispatch) => {
+  auth.signOut();
+  dispatch({ type: CLEAR_CURRENT_USER, payload: {} });
 };
