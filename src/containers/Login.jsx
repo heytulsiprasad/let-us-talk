@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
 import { loginUser } from "./../actions/authActions";
-import { clearErrors } from "./../actions/errorActions";
-import { toast } from "react-toastify";
 
 const initialValues = {
   email: "",
@@ -19,13 +17,6 @@ const Login = (props) => {
       props.history.push("/");
     }
   }, [props.auth.isAuthenticated, props.history]);
-
-  // If errors, show a toast
-  useEffect(() => {
-    toast.error(props.errors.error.message, {
-      onClose: props.clearErrors,
-    });
-  }, [props.errors, props.clearErrors]);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -75,7 +66,6 @@ const Login = (props) => {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
 });
 
-export default connect(mapStateToProps, { loginUser, clearErrors })(Login);
+export default connect(mapStateToProps, { loginUser })(Login);
