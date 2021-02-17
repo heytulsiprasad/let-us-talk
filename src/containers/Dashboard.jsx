@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-import { db } from "./../firebaseInit";
 import {
-  fetchAllRooms,
+  createRoom,
+  fetchRoomsInRealTime,
   sendMessage,
   fetchMessagesInRealTime,
 } from "./../actions/roomActions";
@@ -12,16 +12,14 @@ const Dashboard = (props) => {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [message, setMessage] = useState("");
 
-  const roomRef = db.collection("rooms");
-
   useEffect(() => {
-    props.fetchAllRooms();
+    props.fetchRoomsInRealTime();
     // eslint-disable-next-line
   }, []);
 
   const createRoom = () => {
     let room = prompt("Give a name for your room:");
-    roomRef.doc(room).set({ name: room, timestamp: Date.now() });
+    room !== "" && props.createRoom(room);
   };
 
   // Whenever selected room is changed
@@ -41,7 +39,8 @@ const Dashboard = (props) => {
     e.preventDefault();
 
     // Send to firebase
-    props.sendMessage(selectedRoom, props.auth.user.email, message);
+    message !== "" &&
+      props.sendMessage(selectedRoom, props.auth.user.email, message);
     setMessage(""); // clear
   };
 
@@ -57,11 +56,18 @@ const Dashboard = (props) => {
       <div>
         <h2>Showing all available rooms</h2>
         <div>
-          {props.rooms.allRooms.map((room) => (
-            <div key={room.id} onClick={() => roomClickHandler(room.id)}>
-              <h4>{room.name || room.id}</h4>
-            </div>
-          ))}
+          {!props.rooms.loadRooms ? (
+            Object.keys(props.rooms.allRooms).map((key) => (
+              <div key={key} onClick={() => roomClickHandler(key)}>
+                <h4>{props.rooms.allRooms[key].name}</h4>
+                <p>{props.rooms.allRooms[key].timestamp}</p>
+              </div>
+            ))
+          ) : (
+            <h2>
+              <i>Loading Rooms...</i>
+            </h2>
+          )}
         </div>
         {/* Chat Container */}
         <div>
@@ -81,12 +87,18 @@ const Dashboard = (props) => {
           </div>
           {/* Messages */}
           <h2>Messages</h2>
-          {Object.keys(props.rooms.allMessages).map((key) => (
-            <div key={key}>
-              <h6>{props.rooms.allMessages[key].from}</h6>
-              <p>{props.rooms.allMessages[key].message}</p>
-            </div>
-          ))}
+          {!props.rooms.loadMessages ? (
+            Object.keys(props.rooms.allMessages).map((key) => (
+              <div key={key}>
+                <h6>{props.rooms.allMessages[key].from}</h6>
+                <p>{props.rooms.allMessages[key].message}</p>
+              </div>
+            ))
+          ) : (
+            <h1>
+              <i>Loading Messages...</i>
+            </h1>
+          )}
         </div>
       </div>
     </div>
@@ -99,7 +111,8 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  fetchAllRooms,
+  createRoom,
+  fetchRoomsInRealTime,
   sendMessage,
   fetchMessagesInRealTime,
 })(Dashboard);

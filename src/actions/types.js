@@ -13,6 +13,6 @@ export const SET_ROOMS = "SET_ROOMS";
 export const SET_MESSAGES = "SET_MESSAGES";
 
 // Loader Types
-export const SET_SCREEN_LOADING = "SET_SCREEN_LOADING";
+export const SET_AUTH_LOADING = "SET_AUTH_LOADING";
 export const SET_ROOMS_LOADING = "SET_ROOMS_LOADING";
 export const SET_MESSAGES_LOADING = "SET_MESSAGES_LOADING";

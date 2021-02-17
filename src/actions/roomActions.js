@@ -3,37 +3,40 @@ import {
   SET_MESSAGES,
   SET_ERRORS,
   SET_ROOMS_LOADING,
-  // SET_MESSAGES_LOADING,
+  SET_MESSAGES_LOADING,
 } from "./types";
 import { db } from "./../firebaseInit";
 
-// export const createRoom = (id) => (dispatch) => {
-//   dispatch({ type: SET_ROOMS_LOADING, payload: true });
-
-//   db.collection("rooms").doc(id)
-
-// }
-
-export const fetchAllRooms = () => (dispatch) => {
+export const createRoom = (room) => (dispatch) => {
   dispatch({ type: SET_ROOMS_LOADING, payload: true });
 
-  db.collection("rooms")
-    .get()
-    .then((querySnapshot) => {
-      const tempDoc = querySnapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
+  db.collection("rooms").doc(room).set({ name: room, timestamp: Date.now() });
+};
+
+export const fetchRoomsInRealTime = () => (dispatch) => {
+  dispatch({ type: SET_ROOMS_LOADING, payload: true });
+
+  db.collection("rooms").onSnapshot(
+    (querySnapshot) => {
+      let allRooms = {};
+
+      querySnapshot.forEach((doc) => {
+        allRooms = { ...allRooms, [doc.id]: doc.data() };
       });
 
       dispatch({ type: SET_ROOMS_LOADING, payload: false });
-      dispatch({ type: SET_ROOMS, payload: tempDoc });
-    })
-    .catch((err) => {
-      console.error(err);
+      dispatch({ type: SET_ROOMS, payload: allRooms });
+    },
+    (err) => {
+      console.error("Error getting documents: ", err);
       dispatch({ type: SET_ERRORS, payload: err });
-    });
+    }
+  );
 };
 
 export const fetchMessagesInRealTime = (id) => (dispatch) => {
+  dispatch({ type: SET_MESSAGES_LOADING, payload: true });
+
   db.collection("rooms")
     .doc(id)
     .collection("messages")
@@ -46,6 +49,7 @@ export const fetchMessagesInRealTime = (id) => (dispatch) => {
           allMessages = { ...allMessages, [doc.id]: doc.data() };
         });
 
+        dispatch({ type: SET_MESSAGES_LOADING, payload: false });
         dispatch({ type: SET_MESSAGES, payload: allMessages });
       },
       (err) => {

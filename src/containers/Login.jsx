@@ -34,32 +34,40 @@ const Login = (props) => {
 
   return (
     <div>
-      <h1>Login</h1>
-      <form onSubmit={submitForm}>
-        <label>
-          Email
-          <input
-            type="email"
-            name="email"
-            value={values.email}
-            onChange={handleInputChange}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            name="password"
-            value={values.password}
-            onChange={handleInputChange}
-            required
-          />
-        </label>
-        <button type="submit" onClick={submitForm}>
-          Login
-        </button>
-      </form>
+      {!props.auth.loading ? (
+        <div>
+          <h1>Login</h1>
+          <form onSubmit={submitForm}>
+            <label>
+              Email
+              <input
+                type="email"
+                name="email"
+                value={values.email}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <label>
+              Password
+              <input
+                type="password"
+                name="password"
+                value={values.password}
+                onChange={handleInputChange}
+                required
+              />
+            </label>
+            <button type="submit" onClick={submitForm}>
+              Login
+            </button>
+          </form>
+        </div>
+      ) : (
+        <h1>
+          <i>Loading...</i>
+        </h1>
+      )}
     </div>
   );
 };
