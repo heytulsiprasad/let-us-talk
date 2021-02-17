@@ -27,8 +27,8 @@ const reducer = (state = initialState, action) => {
     case CLEAR_CURRENT_USER:
       return {
         ...state,
-        isAuthenticated: !action.payload,
-        user: action.payload,
+        isAuthenticated: false,
+        user: {},
       };
     default:
       return state;

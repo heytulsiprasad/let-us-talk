@@ -9,28 +9,23 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import PrivateRoute from "./containers/PrivateRoute";
 import { logoutUser } from "./actions/authActions";
-import { clearErrors } from "./actions/errorActions";
+import { clearToasts } from "./actions/toastActions";
 
 function App(props) {
-  const logout = () => {
-    props.logoutUser();
-    toast.success("Logged out successfully");
-  };
-
   // Catch and show all errors here
   useEffect(() => {
-    if (props.errors) {
-      toast.error(props.errors.error.message, {
-        onClose: props.clearErrors,
+    if (props.toasts.status) {
+      toast[props.toasts.status](props.toasts.message, {
+        onClose: props.clearToasts,
       });
     }
-  }, [props.errors, props.clearErrors]);
+  }, [props.toasts, props.clearToasts]);
 
   return (
     <Router>
       <div>
         {props.auth.isAuthenticated ? (
-          <button onClick={logout}>Logout</button>
+          <button onClick={props.logoutUser}>Logout</button>
         ) : (
           <>
             <Link to="/signup">Sign Up</Link>
@@ -50,7 +45,7 @@ function App(props) {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors,
+  toasts: state.toasts,
 });
 
-export default connect(mapStateToProps, { logoutUser, clearErrors })(App);
+export default connect(mapStateToProps, { logoutUser, clearToasts })(App);

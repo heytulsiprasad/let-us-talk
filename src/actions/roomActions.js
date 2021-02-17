@@ -1,7 +1,7 @@
 import {
   SET_ROOMS,
   SET_MESSAGES,
-  SET_ERRORS,
+  SET_TOAST,
   SET_ROOMS_LOADING,
   SET_MESSAGES_LOADING,
 } from "./types";
@@ -29,7 +29,10 @@ export const fetchRoomsInRealTime = () => (dispatch) => {
     },
     (err) => {
       console.error("Error getting documents: ", err);
-      dispatch({ type: SET_ERRORS, payload: err });
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "error", message: err.message },
+      });
     }
   );
 };
@@ -54,7 +57,10 @@ export const fetchMessagesInRealTime = (id) => (dispatch) => {
       },
       (err) => {
         console.error("Error getting documents: ", err);
-        dispatch({ type: SET_ERRORS, payload: err });
+        dispatch({
+          type: SET_TOAST,
+          payload: { status: "error", message: err.message },
+        });
       }
     );
 };
@@ -65,6 +71,56 @@ export const sendMessage = (id, from, message) => (dispatch) => {
     .then(() => console.log("Message sent"))
     .catch((err) => {
       console.error(err);
-      dispatch({ type: SET_ERRORS, payload: err });
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "error", message: err.message },
+      });
+    });
+};
+
+export const deleteRoom = (id) => (dispatch) => {
+  dispatch({ type: SET_ROOMS_LOADING, payload: true });
+  dispatch({ type: SET_MESSAGES_LOADING, payload: true });
+
+  db.collection("rooms")
+    .doc(id)
+    .delete()
+    .then(() => {
+      dispatch({ type: SET_ROOMS_LOADING, payload: false });
+      dispatch({ type: SET_MESSAGES_LOADING, payload: false });
+      dispatch({ type: SET_MESSAGES, payload: {} });
+
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "info", message: "Room deleted" },
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "error", message: err.message },
+      });
+      dispatch({ type: SET_MESSAGES_LOADING, payload: false });
+      dispatch({ type: SET_ROOMS_LOADING, payload: false });
+    });
+};
+
+export const deleteMessage = (roomId, messageId) => (dispatch) => {
+  db.collection("rooms")
+    .doc(roomId)
+    .collection("messages")
+    .doc(messageId)
+    .delete()
+    .then(() => {
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "info", message: "Message deleted" },
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_TOAST,
+        payload: { status: "error", message: err.message },
+      });
     });
 };

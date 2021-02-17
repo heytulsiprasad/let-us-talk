@@ -3,6 +3,7 @@ import {
   SET_MESSAGES,
   SET_ROOMS_LOADING,
   SET_MESSAGES_LOADING,
+  DELETE_ROOM,
 } from "./../actions/types";
 
 const initialState = {
@@ -33,6 +34,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         allMessages: action.payload,
+      };
+    case DELETE_ROOM:
+      return {
+        ...state,
+        allRooms: action.payload,
       };
     default:
       return state;

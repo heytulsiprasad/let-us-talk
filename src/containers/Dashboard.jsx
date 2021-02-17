@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 
 import {
   createRoom,
-  fetchRoomsInRealTime,
   sendMessage,
+  deleteRoom,
+  deleteMessage,
+  fetchRoomsInRealTime,
   fetchMessagesInRealTime,
 } from "./../actions/roomActions";
 
@@ -19,7 +21,8 @@ const Dashboard = (props) => {
 
   const createRoom = () => {
     let room = prompt("Give a name for your room:");
-    room !== "" && props.createRoom(room);
+
+    if (room) props.createRoom(room);
   };
 
   // Whenever selected room is changed
@@ -58,9 +61,14 @@ const Dashboard = (props) => {
         <div>
           {!props.rooms.loadRooms ? (
             Object.keys(props.rooms.allRooms).map((key) => (
-              <div key={key} onClick={() => roomClickHandler(key)}>
-                <h4>{props.rooms.allRooms[key].name}</h4>
+              <div key={key}>
+                <h4 onClick={() => roomClickHandler(key)}>
+                  {props.rooms.allRooms[key].name}
+                </h4>
                 <p>{props.rooms.allRooms[key].timestamp}</p>
+                <button onClick={props.deleteRoom.bind(this, key)}>
+                  Delete
+                </button>
               </div>
             ))
           ) : (
@@ -92,6 +100,11 @@ const Dashboard = (props) => {
               <div key={key}>
                 <h6>{props.rooms.allMessages[key].from}</h6>
                 <p>{props.rooms.allMessages[key].message}</p>
+                <button
+                  onClick={props.deleteMessage.bind(this, selectedRoom, key)}
+                >
+                  Delete Message
+                </button>
               </div>
             ))
           ) : (
@@ -112,7 +125,9 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   createRoom,
-  fetchRoomsInRealTime,
   sendMessage,
+  deleteRoom,
+  deleteMessage,
+  fetchRoomsInRealTime,
   fetchMessagesInRealTime,
 })(Dashboard);
