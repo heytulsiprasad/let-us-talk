@@ -7,10 +7,18 @@ import {
 } from "./types";
 import { db } from "./../firebaseInit";
 
+import slugify from "slugify";
+
 export const createRoom = (room) => (dispatch) => {
   dispatch({ type: SET_ROOMS_LOADING, payload: true });
 
-  db.collection("rooms").doc(room).set({ name: room, timestamp: Date.now() });
+  const slug = slugify(room, { lower: true, strict: true });
+
+  db.collection("rooms").doc(slug).set({
+    name: room,
+    slug: slug,
+    timestamp: Date.now(),
+  });
 };
 
 export const fetchRoomsInRealTime = () => (dispatch) => {

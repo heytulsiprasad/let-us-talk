@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import HashLoader from "react-spinners/HashLoader";
 
 import { loginUser } from "./../actions/authActions";
+import {
+  AuthHeading,
+  LoginWrapper,
+  LoginContainer,
+  LoginCard,
+  LoginForm,
+} from "./../styles/Login.styles";
+import {
+  Button,
+  LoaderContainer,
+  FootNote,
+  StyledLink,
+} from "./../styles/globalStyles";
 
 const initialValues = {
   email: "",
@@ -33,42 +47,52 @@ const Login = (props) => {
   };
 
   return (
-    <div>
-      {!props.auth.loading ? (
-        <div>
-          <h1>Login</h1>
-          <form onSubmit={submitForm}>
-            <label>
-              Email
-              <input
-                type="email"
-                name="email"
-                value={values.email}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <label>
-              Password
-              <input
-                type="password"
-                name="password"
-                value={values.password}
-                onChange={handleInputChange}
-                required
-              />
-            </label>
-            <button type="submit" onClick={submitForm}>
-              Login
-            </button>
-          </form>
-        </div>
-      ) : (
-        <h1>
-          <i>Loading...</i>
-        </h1>
-      )}
-    </div>
+    <LoginWrapper>
+      <LoginContainer>
+        {!props.auth.loading ? (
+          <LoginCard>
+            <AuthHeading>Login</AuthHeading>
+            <LoginForm onSubmit={submitForm}>
+              <div className="fields">
+                <label>
+                  <h2>Email</h2>
+                  <input
+                    type="email"
+                    name="email"
+                    value={values.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
+                <label>
+                  <h2>Password</h2>
+                  <input
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </label>
+              </div>
+              <Button type="submit" onClick={submitForm}>
+                Login
+              </Button>
+            </LoginForm>
+          </LoginCard>
+        ) : (
+          <LoaderContainer>
+            <HashLoader loading color="#fff" size={45} />
+          </LoaderContainer>
+        )}
+        <FootNote>
+          Don't have an account yet?{" "}
+          <StyledLink to="/signup" style={{ textDecoration: "underline" }}>
+            Signup
+          </StyledLink>
+        </FootNote>
+      </LoginContainer>
+    </LoginWrapper>
   );
 };
 
