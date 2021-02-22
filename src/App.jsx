@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -41,6 +42,14 @@ function App(props) {
     </AppContainer>
   );
 }
+
+App.propTypes = {
+  clearToasts: PropTypes.func.isRequired,
+  toasts: PropTypes.shape({
+    message: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+  }),
+};
 
 const mapStateToProps = (state) => ({
   toasts: state.toasts,

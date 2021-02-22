@@ -8,7 +8,7 @@ import {
 const initialState = {
   loadRooms: false,
   loadMessages: false,
-  allRooms: [],
+  allRooms: {},
   allMessages: {},
 };
 

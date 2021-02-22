@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -94,6 +95,15 @@ const Login = (props) => {
       </LoginContainer>
     </LoginWrapper>
   );
+};
+
+Login.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

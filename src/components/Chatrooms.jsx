@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -117,6 +118,13 @@ const Chatrooms = (props) => {
       </Container>
     </Wrapper>
   );
+};
+
+Chatrooms.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  rooms: PropTypes.object.isRequired,
+  createRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
 };
 
 export default Chatrooms;

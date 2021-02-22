@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import {
@@ -39,6 +40,24 @@ const Rooms = (props) => {
       />
     </RoomsContainer>
   );
+};
+
+Rooms.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  rooms: PropTypes.shape({
+    loadRooms: PropTypes.bool.isRequired,
+    loadMessages: PropTypes.bool.isRequired,
+    allRooms: PropTypes.object.isRequired,
+    allMessages: PropTypes.object.isRequired,
+  }),
+  syncRoomsCollection: PropTypes.func.isRequired,
+  addNewRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { logoutUser } from "./../actions/authActions";
@@ -30,6 +31,18 @@ const Conversation = (props) => {
       />
     </ConversationContainer>
   );
+};
+
+Conversation.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  loadMessages: PropTypes.bool.isRequired,
+  messages: PropTypes.object.isRequired,
+  syncMessagesCollection: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

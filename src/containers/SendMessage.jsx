@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { sendMessage } from "./../actions/roomActions";
@@ -35,6 +36,11 @@ const SendMessage = (props) => {
       </form>
     </div>
   );
+};
+
+SendMessage.propTypes = {
+  email: PropTypes.string.isRequired,
+  sendMessage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

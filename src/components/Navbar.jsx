@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -67,6 +68,12 @@ const Navbar = (props) => {
       </Container>
     </Wrapper>
   );
+};
+
+Navbar.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  email: PropTypes.string.isRequired,
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default Navbar;

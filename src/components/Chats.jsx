@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import HashLoader from "react-spinners/HashLoader";
 
 import { LoaderContainer } from "../styles/globalStyles";
@@ -44,6 +45,13 @@ const Chats = (props) => {
   );
 };
 
+Chats.propTypes = {
+  currentRoom: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  conversationId: PropTypes.string.isRequired,
+  messages: PropTypes.object.isRequired,
+};
+
 export default Chats;
 
 const MessageBox = (props) => {
@@ -68,4 +76,10 @@ const MessageBox = (props) => {
       </Typography>
     </Message>
   );
+};
+
+MessageBox.propTypes = {
+  email: PropTypes.string.isRequired,
+  timestamp: PropTypes.number.isRequired,
+  message: PropTypes.string.isRequired,
 };
