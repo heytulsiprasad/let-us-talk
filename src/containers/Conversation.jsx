@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
 import { logoutUser } from "./../actions/authActions";
-import { fetchMessagesInRealTime } from "./../actions/roomActions";
+import { syncMessagesCollection } from "./../actions/roomActions";
 import { ConversationContainer } from "./../styles/Conversation.styles";
 import Navbar from "./../components/Navbar";
 import Chats from "./../components/Chats";
@@ -11,7 +11,7 @@ const Conversation = (props) => {
   const conversationId = props.match.params.id;
 
   useEffect(() => {
-    props.fetchMessagesInRealTime(conversationId);
+    props.syncMessagesCollection(conversationId);
     // eslint-disable-next-line
   }, []);
 
@@ -38,7 +38,9 @@ const mapStateToProps = (state) => ({
   messages: state.rooms.allMessages,
 });
 
-export default connect(mapStateToProps, {
-  logoutUser,
-  fetchMessagesInRealTime,
-})(Conversation);
+const mapDispatchToProps = (dispatch) => ({
+  syncMessagesCollection: (id) => dispatch(syncMessagesCollection(id)),
+  logoutUser: () => dispatch(logoutUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Conversation);

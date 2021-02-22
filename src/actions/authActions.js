@@ -1,9 +1,10 @@
 import {
-  // CLEAR_CURRENT_USER,
   SET_CURRENT_USER,
   SET_AUTH_LOADING,
+  CLEAR_CURRENT_USER,
   LOGIN_USER,
   SIGNUP_USER,
+  LOGOUT_USER,
 } from "./types";
 
 export const setLoading = (status) => ({
@@ -26,13 +27,10 @@ export const signUpUser = (userData, history) => ({
   payload: { userData, history },
 });
 
-// export const logoutUser = () => (dispatch) => {
-//   dispatch({ type: SET_AUTH_LOADING, payload: true });
-//   dispatch({
-//     type: SET_TOAST,
-//     payload: { status: "info", message: "Logged out successfully" },
-//   });
-//   auth.signOut();
-//   dispatch({ type: SET_AUTH_LOADING, payload: false });
-//   dispatch({ type: CLEAR_CURRENT_USER });
-// };
+export const logoutUser = () => ({
+  type: LOGOUT_USER,
+});
+
+export const clearCurrentUser = () => ({
+  type: CLEAR_CURRENT_USER,
+});

@@ -26,7 +26,7 @@ const Chats = (props) => {
               {Object.keys(props.messages).map((key) => (
                 <MessageBox
                   key={key}
-                  from={props.messages[key].from}
+                  email={props.messages[key].email || props.messages[key].from} // from is for backwards compatibility
                   message={props.messages[key].message}
                   timestamp={props.messages[key].timestamp}
                 />
@@ -57,7 +57,7 @@ const MessageBox = (props) => {
     <Message ref={ref}>
       <MessageDetails>
         <Typography tertiary as="h4">
-          {props.from}
+          {props.email}
         </Typography>
         <Typography tertiary as="h6">
           {new Date(props.timestamp).toLocaleTimeString()}

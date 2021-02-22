@@ -41,4 +41,9 @@ const mapStateToProps = (state) => ({
   email: state.auth.user.email,
 });
 
-export default connect(mapStateToProps, { sendMessage })(SendMessage);
+const mapDispatchToProps = (dispatch) => ({
+  sendMessage: (conversationId, email, message) =>
+    dispatch(sendMessage(conversationId, email, message)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SendMessage);

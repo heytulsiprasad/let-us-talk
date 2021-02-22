@@ -4,13 +4,13 @@ import { connect } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-// import Rooms from "./containers/Rooms";
+import Rooms from "./containers/Rooms";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
-// import PrivateRoute from "./containers/PrivateRoute";
+import PrivateRoute from "./containers/PrivateRoute";
 import { clearToasts } from "./actions/toastActions";
 import { AppContainer } from "./styles/App.styles";
-// import Conversation from "./containers/Conversation";
+import Conversation from "./containers/Conversation";
 
 function App(props) {
   // Catch and show all toasts here
@@ -28,12 +28,12 @@ function App(props) {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
-          {/* <PrivateRoute exact path="/" component={Rooms} /> */}
-          {/* <PrivateRoute
+          <PrivateRoute exact path="/" component={Rooms} />
+          <PrivateRoute
             exact
             path="/conversation/:id"
             component={Conversation}
-          /> */}
+          />
           <Route path="*" component={Login} />
         </Switch>
         <ToastContainer position="bottom-right" autoClose={4000} />
