@@ -1,13 +1,24 @@
 import {
+  GET_ROOMS,
   SET_ROOMS,
   SET_MESSAGES,
   SET_TOAST,
   SET_ROOMS_LOADING,
   SET_MESSAGES_LOADING,
 } from "./types";
+
 import { db } from "./../firebaseInit";
 
 import slugify from "slugify";
+
+// export const setLoading = (status) => ({
+//   type: SET_ROOMS_LOADING,
+//   payload: status,
+// });
+
+// export const fetchRoomsInRealTime = () => ({
+//   type: GET_ROOMS,
+// });
 
 export const createRoom = (room) => (dispatch) => {
   dispatch({ type: SET_ROOMS_LOADING, payload: true });

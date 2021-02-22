@@ -24,7 +24,7 @@ const Rooms = (props) => {
 
   const createRoom = () => {
     let room = prompt("Give a name for your room:");
-    if (room) props.createRoom(room);
+    // if (room) props.createRoom(room);
   };
 
   return (
@@ -81,12 +81,18 @@ const mapStateToProps = (state) => ({
   rooms: state.rooms,
 });
 
-export default connect(mapStateToProps, {
-  logoutUser,
-  createRoom,
-  sendMessage,
-  deleteRoom,
-  deleteMessage,
-  fetchRoomsInRealTime,
-  fetchMessagesInRealTime,
-})(Rooms);
+const mapDispatchToProps = (dispatch) => ({
+  fetchRoomsInRealTime: () => dispatch(fetchRoomsInRealTime()),
+});
+
+// {
+//   logoutUser,
+//   createRoom,
+//   sendMessage,
+//   deleteRoom,
+//   deleteMessage,
+//   fetchRoomsInRealTime,
+//   fetchMessagesInRealTime,
+// }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

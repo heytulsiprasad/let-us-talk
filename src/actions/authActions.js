@@ -1,56 +1,38 @@
-import { auth } from "./../firebaseInit";
 import {
-  CLEAR_CURRENT_USER,
+  // CLEAR_CURRENT_USER,
   SET_CURRENT_USER,
-  SET_TOAST,
   SET_AUTH_LOADING,
+  LOGIN_USER,
+  SIGNUP_USER,
 } from "./types";
 
-export const signUpUser = ({ email, password }, history) => (dispatch) => {
-  dispatch({ type: SET_AUTH_LOADING, payload: true });
+export const setLoading = (status) => ({
+  type: SET_AUTH_LOADING,
+  payload: status,
+});
 
-  auth
-    .createUserWithEmailAndPassword(email, password)
-    .then((response) => {
-      dispatch({ type: SET_AUTH_LOADING, payload: false });
-      dispatch({ type: SET_CURRENT_USER, payload: response.user });
-      history.push("/");
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-      dispatch({ type: SET_AUTH_LOADING, payload: false });
-    });
-};
+export const loginUser = (userData, history) => ({
+  type: LOGIN_USER,
+  payload: { userData, history },
+});
 
-export const loginUser = ({ email, password }, history) => (dispatch) => {
-  dispatch({ type: SET_AUTH_LOADING, payload: true });
+export const setCurrentUser = (userData) => ({
+  type: SET_CURRENT_USER,
+  payload: userData,
+});
 
-  auth
-    .signInWithEmailAndPassword(email, password)
-    .then((response) => {
-      dispatch({ type: SET_AUTH_LOADING, payload: false });
-      dispatch({ type: SET_CURRENT_USER, payload: response.user });
-      history.push("/");
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-      dispatch({ type: SET_AUTH_LOADING, payload: false });
-    });
-};
+export const signUpUser = (userData, history) => ({
+  type: SIGNUP_USER,
+  payload: { userData, history },
+});
 
-export const logoutUser = () => (dispatch) => {
-  dispatch({ type: SET_AUTH_LOADING, payload: true });
-  dispatch({
-    type: SET_TOAST,
-    payload: { status: "info", message: "Logged out successfully" },
-  });
-  auth.signOut();
-  dispatch({ type: SET_AUTH_LOADING, payload: false });
-  dispatch({ type: CLEAR_CURRENT_USER });
-};
+// export const logoutUser = () => (dispatch) => {
+//   dispatch({ type: SET_AUTH_LOADING, payload: true });
+//   dispatch({
+//     type: SET_TOAST,
+//     payload: { status: "info", message: "Logged out successfully" },
+//   });
+//   auth.signOut();
+//   dispatch({ type: SET_AUTH_LOADING, payload: false });
+//   dispatch({ type: CLEAR_CURRENT_USER });
+// };

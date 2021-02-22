@@ -101,4 +101,8 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { signUpUser })(Signup);
+const mapDispatchToProps = (dispatch) => ({
+  signUpUser: (userData, history) => dispatch(signUpUser(userData, history)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

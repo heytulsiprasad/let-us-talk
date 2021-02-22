@@ -36,7 +36,7 @@ const Login = (props) => {
     e.preventDefault();
 
     const userData = { ...values };
-    props.loginUser(userData, props.history);
+    props.login(userData, props.history);
   };
 
   const handleInputChange = (e) => {
@@ -100,4 +100,8 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { loginUser })(Login);
+const mapDispatchToProps = (dispatch) => ({
+  login: (userData, history) => dispatch(loginUser(userData, history)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
