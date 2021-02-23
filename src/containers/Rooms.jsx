@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import {
-  createRoom,
-  sendMessage,
-  deleteRoom,
-  deleteMessage,
-  fetchRoomsInRealTime,
-  fetchMessagesInRealTime,
+  syncRoomsCollection,
+  addNewRoom,
+  deleteRoomStart,
 } from "../actions/roomActions";
 
 import { logoutUser } from "../actions/authActions";
@@ -18,13 +16,13 @@ import Chatrooms from "../components/Chatrooms";
 
 const Rooms = (props) => {
   useEffect(() => {
-    props.fetchRoomsInRealTime();
+    props.syncRoomsCollection();
     // eslint-disable-next-line
   }, []);
 
   const createRoom = () => {
     let room = prompt("Give a name for your room:");
-    if (room) props.createRoom(room);
+    if (room) props.addNewRoom(room);
   };
 
   return (
@@ -40,40 +38,26 @@ const Rooms = (props) => {
         createRoom={createRoom}
         deleteRoom={props.deleteRoom}
       />
-      {/* <div>
-            <form onSubmit={onFormSubmit}>
-              <input
-                type="text"
-                value={message}
-                onChange={inputChangeHandler}
-                placeholder="Type here..."
-              />
-              <button type="button" onClick={onFormSubmit}>
-                Send
-              </button>
-            </form>
-          </div> */}
-      {/* Messages */}
-      {/* <h2>Messages</h2> */}
-      {/* {!props.rooms.loadMessages ? (
-            Object.keys(props.rooms.allMessages).map((key) => (
-              <div key={key}>
-                <h6>{props.rooms.allMessages[key].from}</h6>
-                <p>{props.rooms.allMessages[key].message}</p>
-                <button
-                  onClick={props.deleteMessage.bind(this, selectedRoom, key)}
-                >
-                  Delete Message
-                </button>
-              </div>
-            ))
-          ) : (
-            <h1>
-              <i>Loading Messages...</i>
-            </h1>
-          )} */}
     </RoomsContainer>
   );
+};
+
+Rooms.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  rooms: PropTypes.shape({
+    loadRooms: PropTypes.bool.isRequired,
+    loadMessages: PropTypes.bool.isRequired,
+    allRooms: PropTypes.object.isRequired,
+    allMessages: PropTypes.object.isRequired,
+  }),
+  syncRoomsCollection: PropTypes.func.isRequired,
+  addNewRoom: PropTypes.func.isRequired,
+  deleteRoom: PropTypes.func.isRequired,
+  logoutUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -81,12 +65,11 @@ const mapStateToProps = (state) => ({
   rooms: state.rooms,
 });
 
-export default connect(mapStateToProps, {
-  logoutUser,
-  createRoom,
-  sendMessage,
-  deleteRoom,
-  deleteMessage,
-  fetchRoomsInRealTime,
-  fetchMessagesInRealTime,
-})(Rooms);
+const mapDispatchToProps = (dispatch) => ({
+  syncRoomsCollection: () => dispatch(syncRoomsCollection()),
+  addNewRoom: (roomName) => dispatch(addNewRoom(roomName)),
+  deleteRoom: (id) => dispatch(deleteRoomStart(id)),
+  logoutUser: () => dispatch(logoutUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

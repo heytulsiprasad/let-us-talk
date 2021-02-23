@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -97,8 +98,21 @@ const Signup = (props) => {
   );
 };
 
+Signup.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  signUpUser: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { signUpUser })(Signup);
+const mapDispatchToProps = (dispatch) => ({
+  signUpUser: (userData, history) => dispatch(signUpUser(userData, history)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

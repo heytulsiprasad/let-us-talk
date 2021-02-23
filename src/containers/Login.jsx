@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -36,7 +37,7 @@ const Login = (props) => {
     e.preventDefault();
 
     const userData = { ...values };
-    props.loginUser(userData, props.history);
+    props.login(userData, props.history);
   };
 
   const handleInputChange = (e) => {
@@ -96,8 +97,21 @@ const Login = (props) => {
   );
 };
 
+Login.propTypes = {
+  auth: PropTypes.shape({
+    isAuthenticated: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    user: PropTypes.object.isRequired,
+  }),
+  login: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { loginUser })(Login);
+const mapDispatchToProps = (dispatch) => ({
+  login: (userData, history) => dispatch(loginUser(userData, history)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

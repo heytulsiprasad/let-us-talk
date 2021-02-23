@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { sendMessage } from "./../actions/roomActions";
@@ -37,8 +38,18 @@ const SendMessage = (props) => {
   );
 };
 
+SendMessage.propTypes = {
+  email: PropTypes.string.isRequired,
+  sendMessage: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   email: state.auth.user.email,
 });
 
-export default connect(mapStateToProps, { sendMessage })(SendMessage);
+const mapDispatchToProps = (dispatch) => ({
+  sendMessage: (conversationId, email, message) =>
+    dispatch(sendMessage(conversationId, email, message)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SendMessage);

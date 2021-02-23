@@ -1,134 +1,92 @@
 import {
   SET_ROOMS,
-  SET_MESSAGES,
-  SET_TOAST,
   SET_ROOMS_LOADING,
+  SYNC_ROOMS,
+  SYNC_ROOMS_SUCCESS,
+  SYNC_ROOMS_FAIL,
+  ADD_NEW_ROOM,
+  DELETE_ROOM,
+  DELETE_ROOM_START,
   SET_MESSAGES_LOADING,
+  SYNC_MESSAGES,
+  SYNC_MESSAGES_SUCCESS,
+  SYNC_MESSAGES_FAIL,
+  ADD_NEW_MESSAGE,
+  SET_MESSAGES,
 } from "./types";
-import { db } from "./../firebaseInit";
 
-import slugify from "slugify";
+// LOADING ACTIONS
 
-export const createRoom = (room) => (dispatch) => {
-  dispatch({ type: SET_ROOMS_LOADING, payload: true });
+export const setRoomsLoading = (status) => ({
+  type: SET_ROOMS_LOADING,
+  payload: status,
+});
 
-  const slug = slugify(room, { lower: true, strict: true });
+export const setMessagesLoading = (status) => ({
+  type: SET_MESSAGES_LOADING,
+  payload: status,
+});
 
-  db.collection("rooms").doc(slug).set({
-    name: room,
-    slug: slug,
-    timestamp: Date.now(),
-  });
-};
+// ROOM ACTIONS
 
-export const fetchRoomsInRealTime = () => (dispatch) => {
-  dispatch({ type: SET_ROOMS_LOADING, payload: true });
+export const setRoomsInStore = (payload) => ({
+  type: SET_ROOMS,
+  payload: payload,
+});
 
-  db.collection("rooms").onSnapshot(
-    (querySnapshot) => {
-      let allRooms = {};
+export const syncRoomsCollection = () => ({
+  type: SYNC_ROOMS,
+});
 
-      querySnapshot.forEach((doc) => {
-        allRooms = { ...allRooms, [doc.id]: doc.data() };
-      });
+export const syncRoomsSuccess = (querySelector) => ({
+  type: SYNC_ROOMS_SUCCESS,
+  querySelector,
+});
 
-      dispatch({ type: SET_ROOMS_LOADING, payload: false });
-      dispatch({ type: SET_ROOMS, payload: allRooms });
-    },
-    (err) => {
-      console.error("Error getting documents: ", err);
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-    }
-  );
-};
+export const syncRoomFailure = (error) => ({
+  type: SYNC_ROOMS_FAIL,
+  error,
+});
 
-export const fetchMessagesInRealTime = (id) => (dispatch) => {
-  dispatch({ type: SET_MESSAGES_LOADING, payload: true });
+export const addNewRoom = (roomName) => ({
+  type: ADD_NEW_ROOM,
+  roomName: roomName,
+});
 
-  db.collection("rooms")
-    .doc(id)
-    .collection("messages")
-    .orderBy("timestamp")
-    .onSnapshot(
-      (querySnapshot) => {
-        let allMessages = {};
+export const deleteRoom = () => ({
+  type: DELETE_ROOM,
+});
 
-        querySnapshot.forEach((doc) => {
-          allMessages = { ...allMessages, [doc.id]: doc.data() };
-        });
+export const deleteRoomStart = (id) => ({
+  type: DELETE_ROOM_START,
+  id,
+});
 
-        dispatch({ type: SET_MESSAGES_LOADING, payload: false });
-        dispatch({ type: SET_MESSAGES, payload: allMessages });
-      },
-      (err) => {
-        console.error("Error getting documents: ", err);
-        dispatch({
-          type: SET_TOAST,
-          payload: { status: "error", message: err.message },
-        });
-      }
-    );
-};
+// MESSAGES ACTIONS
 
-export const sendMessage = (id, from, message) => (dispatch) => {
-  db.collection(`rooms/${id}/messages`)
-    .add({ from, message, timestamp: Date.now() })
-    .then(() => console.log("Message sent"))
-    .catch((err) => {
-      console.error(err);
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-    });
-};
+export const setMessagessInStore = (payload) => ({
+  type: SET_MESSAGES,
+  payload: payload,
+});
 
-export const deleteRoom = (id) => (dispatch) => {
-  dispatch({ type: SET_ROOMS_LOADING, payload: true });
-  dispatch({ type: SET_MESSAGES_LOADING, payload: true });
+export const syncMessagesCollection = (id) => ({
+  type: SYNC_MESSAGES,
+  id,
+});
 
-  db.collection("rooms")
-    .doc(id)
-    .delete()
-    .then(() => {
-      dispatch({ type: SET_ROOMS_LOADING, payload: false });
-      dispatch({ type: SET_MESSAGES_LOADING, payload: false });
-      dispatch({ type: SET_MESSAGES, payload: {} });
+export const syncMessagesSuccess = (querySelector) => ({
+  type: SYNC_MESSAGES_SUCCESS,
+  querySelector,
+});
 
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "info", message: "Room deleted" },
-      });
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-      dispatch({ type: SET_MESSAGES_LOADING, payload: false });
-      dispatch({ type: SET_ROOMS_LOADING, payload: false });
-    });
-};
+export const syncMessagesFailure = (error) => ({
+  type: SYNC_MESSAGES_FAIL,
+  error,
+});
 
-export const deleteMessage = (roomId, messageId) => (dispatch) => {
-  db.collection("rooms")
-    .doc(roomId)
-    .collection("messages")
-    .doc(messageId)
-    .delete()
-    .then(() => {
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "info", message: "Message deleted" },
-      });
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_TOAST,
-        payload: { status: "error", message: err.message },
-      });
-    });
-};
+export const sendMessage = (conversationId, email, message) => ({
+  type: ADD_NEW_MESSAGE,
+  conversationId,
+  email,
+  message,
+});

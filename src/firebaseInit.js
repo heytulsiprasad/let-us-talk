@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import ReduxSagaFirebase from "redux-saga-firebase";
 
 const firebaseApp = firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -11,3 +12,5 @@ const firebaseApp = firebase.initializeApp({
 
 export const db = firebaseApp.firestore();
 export const auth = firebaseApp.auth();
+
+export const rsf = new ReduxSagaFirebase(firebaseApp);

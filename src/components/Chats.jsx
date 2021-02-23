@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import HashLoader from "react-spinners/HashLoader";
 
 import { LoaderContainer } from "../styles/globalStyles";
@@ -26,7 +27,7 @@ const Chats = (props) => {
               {Object.keys(props.messages).map((key) => (
                 <MessageBox
                   key={key}
-                  from={props.messages[key].from}
+                  email={props.messages[key].email || props.messages[key].from} // from is for backwards compatibility
                   message={props.messages[key].message}
                   timestamp={props.messages[key].timestamp}
                 />
@@ -44,6 +45,13 @@ const Chats = (props) => {
   );
 };
 
+Chats.propTypes = {
+  currentRoom: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  conversationId: PropTypes.string.isRequired,
+  messages: PropTypes.object.isRequired,
+};
+
 export default Chats;
 
 const MessageBox = (props) => {
@@ -57,7 +65,7 @@ const MessageBox = (props) => {
     <Message ref={ref}>
       <MessageDetails>
         <Typography tertiary as="h4">
-          {props.from}
+          {props.email}
         </Typography>
         <Typography tertiary as="h6">
           {new Date(props.timestamp).toLocaleTimeString()}
@@ -68,4 +76,10 @@ const MessageBox = (props) => {
       </Typography>
     </Message>
   );
+};
+
+MessageBox.propTypes = {
+  email: PropTypes.string.isRequired,
+  timestamp: PropTypes.number.isRequired,
+  message: PropTypes.string.isRequired,
 };

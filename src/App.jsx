@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,7 +9,6 @@ import Rooms from "./containers/Rooms";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import PrivateRoute from "./containers/PrivateRoute";
-import { logoutUser } from "./actions/authActions";
 import { clearToasts } from "./actions/toastActions";
 import { AppContainer } from "./styles/App.styles";
 import Conversation from "./containers/Conversation";
@@ -43,8 +43,20 @@ function App(props) {
   );
 }
 
+App.propTypes = {
+  clearToasts: PropTypes.func.isRequired,
+  toasts: PropTypes.shape({
+    message: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+  }),
+};
+
 const mapStateToProps = (state) => ({
   toasts: state.toasts,
 });
 
-export default connect(mapStateToProps, { logoutUser, clearToasts })(App);
+const mapDispatchToProps = (dispatch) => ({
+  clearToasts: () => dispatch(clearToasts()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
